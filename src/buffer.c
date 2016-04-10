@@ -3451,19 +3451,19 @@ maketitle(void)
 	    if (stl_syntax & STL_IN_ICON)
 	    {
 		int	use_sandbox = FALSE;
-		int	save_called_emsg = called_emsg;
+		int	saved_did_emsg = did_emsg;
 
 # ifdef FEAT_EVAL
 		use_sandbox = was_set_insecurely((char_u *)"iconstring", 0);
 # endif
-		called_emsg = FALSE;
+		did_emsg = FALSE;
 		build_stl_str_hl(curwin, i_str, sizeof(buf),
 						    p_iconstring, use_sandbox,
 						    0, 0, NULL, NULL);
-		if (called_emsg)
+		if (did_emsg)
 		    set_string_option_direct((char_u *)"iconstring", -1,
 					   (char_u *)"", OPT_FREE, SID_ERROR);
-		called_emsg |= save_called_emsg;
+		did_emsg |= saved_did_emsg;
 	    }
 	    else
 #endif
