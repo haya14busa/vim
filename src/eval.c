@@ -11883,8 +11883,6 @@ filter_map_one(typval_T *tv, typval_T *expr, int map, int *remp)
     int		dummy;
 
     copy_tv(tv, &vimvars[VV_VAL].vv_tv);
-    // s = expr;
-    // if (eval1(&s, &rettv, TRUE) == FAIL)
     s = expr->vval.v_string;
     if (expr->v_type == VAR_FUNC)
     {
