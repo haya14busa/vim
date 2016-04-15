@@ -221,3 +221,25 @@ endfunction
 function! Test_lambda_in_sandbox()
   call assert_fails(':sandbox call lambda("")', 'E48:')
 endfunction
+
+function! Test_lambda_with_timer()
+  if !has('timers')
+    return
+  endif
+
+  let s:n = 0
+  let s:timer_id = 0
+  function! s:Foo()
+    let n = 0
+    let s:timer_id = timer_start(50, lambda("let n += 1 | let s:n = n | echo n"), {"repeat": -1})
+  endfunction
+
+  call s:Foo()
+  sleep 100ms
+  " do not collect lambda nor l:n in lambda
+  call garbagecollect_for_testing()
+  sleep 100ms
+  call timer_stop(s:timer_id)
+  call assert_true(s:n > 3)
+  call assert_true(s:n < 5)
+endfunction
