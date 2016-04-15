@@ -11803,7 +11803,7 @@ filter_map(typval_T *argvars, typval_T *rettv, int map)
     if (expr->v_type != VAR_UNKNOWN)
     {
 	prepare_vimvar(VV_VAL, &save_val);
-	expr = skipwhite(expr);
+	expr = (typval_T*)skipwhite((char_u*)expr);
 
 	/* We reset "did_emsg" to be able to detect whether an error
 	 * occurred during evaluation of the expression. */
