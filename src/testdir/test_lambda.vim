@@ -241,5 +241,4 @@ function! Test_lambda_with_timer()
   sleep 100ms
   call timer_stop(s:timer_id)
   call assert_true(s:n > 3)
-  call assert_true(s:n < 5)
 endfunction
