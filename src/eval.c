@@ -22874,6 +22874,8 @@ find_var_in_scoped_ht(name, varname, no_autoload)
 	    if (v != NULL)
 		break;
 	}
+	if (current_funccal == current_funccal->func->uf_scoped)
+	    break;
 	current_funccal = current_funccal->func->uf_scoped;
     }
     current_funccal = old_current_funccal;
@@ -25803,7 +25805,7 @@ can_free_funccal(funccall_T *fc, int copyID)
     return (fc->l_varlist.lv_copyID != copyID
 	    && fc->l_vars.dv_copyID != copyID
 	    && fc->l_avars.dv_copyID != copyID
-	    && fc->lambda_copyID != copyID);
+	    && (!fc->ref_by_lambda && fc->lambda_copyID != copyID));
 }
 
 /*
