@@ -242,3 +242,8 @@ function! Test_lambda_with_timer()
   call timer_stop(s:timer_id)
   call assert_true(s:n > 3)
 endfunction
+
+function! Test_lambda_with_partial()
+  let l:Cb = function(lambda(":return ['zero', a:1, a:2, a:3]"), ['one', 'two'])
+  call assert_equal(['zero', 'one', 'two', 'three'], l:Cb('three'))
+endfunction
