@@ -15261,7 +15261,6 @@ f_lambda(argvars, rettv)
     ufunc_T	*fp;
     char_u	name[20];
     static int	lambda_no = 0;
-    funccall_T	*fc;
 
     if (check_secure())
 	return;
@@ -15274,7 +15273,7 @@ f_lambda(argvars, rettv)
     if (fp == NULL)
 	goto erret;
 
-    sprintf(name, "<LAMBDA>%d", ++lambda_no);
+    sprintf((char*)name, "<LAMBDA>%d", ++lambda_no);
     rettv->vval.v_string = vim_strsave(name);
 
     ga_init2(&newargs, (int)sizeof(char_u *), 1);
@@ -20776,8 +20775,15 @@ get_callback(typval_T *arg, partial_T **pp)
 	return (*pp)->pt_name;
     }
     *pp = NULL;
-    if (arg->v_type == VAR_FUNC || arg->v_type == VAR_STRING)
+    if (arg->v_type == VAR_FUNC)
+    {
+	func_ref(arg->vval.v_string);
 	return arg->vval.v_string;
+    }
+    if (arg->v_type == VAR_STRING)
+    {
+	return arg->vval.v_string;
+    }
     if (arg->v_type == VAR_NUMBER && arg->vval.v_number == 0)
 	return (char_u *)"";
     EMSG(_("E921: Invalid callback argument"));
