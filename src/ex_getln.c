@@ -244,6 +244,7 @@ getcmdline(
     old_curswant = curwin->w_curswant;
     old_leftcol = curwin->w_leftcol;
     old_topline = curwin->w_topline;
+    save_search_patterns(); /* save it for incsearch. may be restored later */
 # ifdef FEAT_DIFF
     old_topfill = curwin->w_topfill;
 # endif
@@ -1904,8 +1905,10 @@ cmdline_changed:
 	    curwin->w_cursor = search_start;  /* start at old position */
 
 	    /* If there is no command line, don't do anything */
-	    if (ccline.cmdlen == 0)
+	    if (ccline.cmdlen == 0) {
 		i = 0;
+		SET_NO_HLSEARCH(TRUE); /* Turn off previous highlight */
+	    }
 	    else
 	    {
 		cursor_off();		/* so the user knows we're busy */
@@ -1916,7 +1919,8 @@ cmdline_changed:
 		profile_setlimit(500L, &tm);
 #endif
 		i = do_search(NULL, firstc, ccline.cmdbuff, count,
-			SEARCH_KEEP + SEARCH_OPT + SEARCH_NOOF + SEARCH_PEEK,
+			(p_ihls ? 0 : SEARCH_KEEP) + SEARCH_OPT + SEARCH_NOOF +
+			SEARCH_PEEK,
 #ifdef FEAT_RELTIME
 			&tm, NULL
 #else
@@ -2017,8 +2021,10 @@ returncmd:
 #ifdef FEAT_SEARCH_EXTRA
     if (did_incsearch)
     {
-	if (gotesc)
+	if (gotesc) {
 	    curwin->w_cursor = save_cursor;
+	    restore_search_patterns();
+	}
 	else
 	{
 	    if (!EQUAL_POS(save_cursor, search_start))
@@ -2026,6 +2032,8 @@ returncmd:
 		/* put the '" mark at the original position */
 		curwin->w_cursor = save_cursor;
 		setpcmark();
+	    } else {
+		restore_search_patterns();
 	    }
 	    curwin->w_cursor = search_start;
 	}

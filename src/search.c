@@ -300,7 +300,8 @@ save_re_pat(int idx, char_u *pat, int magic)
 #if defined(FEAT_AUTOCMD) || defined(FEAT_EVAL) || defined(PROTO)
 /*
  * Save the search patterns, so they can be restored later.
- * Used before/after executing autocommands and user functions.
+ * Used before/after executing autocommands, user functions and incremental
+ * highlight search.
  */
 static int save_level = 0;
 
