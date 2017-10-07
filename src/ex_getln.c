@@ -244,7 +244,6 @@ getcmdline(
     old_curswant = curwin->w_curswant;
     old_leftcol = curwin->w_leftcol;
     old_topline = curwin->w_topline;
-    save_search_patterns(); /* save it for incsearch. may be restored later */
 # ifdef FEAT_DIFF
     old_topfill = curwin->w_topfill;
 # endif
@@ -1903,6 +1902,7 @@ cmdline_changed:
 	    }
 	    incsearch_postponed = FALSE;
 	    curwin->w_cursor = search_start;  /* start at old position */
+	    save_search_patterns();
 
 	    /* If there is no command line, don't do anything */
 	    if (ccline.cmdlen == 0) {
@@ -1977,6 +1977,7 @@ cmdline_changed:
 	    save_cmdline(&save_ccline);
 	    update_screen(SOME_VALID);
 	    restore_cmdline(&save_ccline);
+	    restore_search_patterns();
 
 	    /* Leave it at the end to make CTRL-R CTRL-W work. */
 	    if (i != 0)
@@ -2021,10 +2022,8 @@ returncmd:
 #ifdef FEAT_SEARCH_EXTRA
     if (did_incsearch)
     {
-	if (gotesc) {
+	if (gotesc)
 	    curwin->w_cursor = save_cursor;
-	    restore_search_patterns();
-	}
 	else
 	{
 	    if (!EQUAL_POS(save_cursor, search_start))
@@ -2032,8 +2031,6 @@ returncmd:
 		/* put the '" mark at the original position */
 		curwin->w_cursor = save_cursor;
 		setpcmark();
-	    } else {
-		restore_search_patterns();
 	    }
 	    curwin->w_cursor = search_start;
 	}
