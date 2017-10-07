@@ -100,6 +100,9 @@ static int	lastc_bytelen = 1;	/* >1 for multi-byte char */
 #if defined(FEAT_AUTOCMD) || defined(FEAT_EVAL) || defined(PROTO)
 /* copy of spats[], for keeping the search patterns while executing autocmds */
 static struct spat  saved_spats[2];
+/* copy of spats[RE_SEARCH], for keeping the search patterns while incremental
+ * searching */
+static struct spat  saved_last_search_spat;
 static int	    saved_last_idx = 0;
 # ifdef FEAT_SEARCH_EXTRA
 static int	    saved_no_hlsearch = 0;
@@ -300,8 +303,7 @@ save_re_pat(int idx, char_u *pat, int magic)
 #if defined(FEAT_AUTOCMD) || defined(FEAT_EVAL) || defined(PROTO)
 /*
  * Save the search patterns, so they can be restored later.
- * Used before/after executing autocommands, user functions and incremental
- * highlight search.
+ * Used before/after executing autocommands and user functions.
  */
 static int save_level = 0;
 
@@ -342,6 +344,40 @@ restore_search_patterns(void)
     }
 }
 #endif
+
+/*
+ * Save and restore the search pattern for incremental highlight search
+ * feature ('inchlsearch').
+ *
+ * It's similar but differnt from save_search_patterns() and
+ * restore_search_patterns(), because the search pattern must be restored when
+ * cannceling incremental searching even if it's called inside user functions.
+ */
+    void
+save_last_search_pattern(void)
+{
+    saved_last_search_spat = spats[RE_SEARCH];
+    if (spats[RE_SEARCH].pat != NULL)
+	saved_last_search_spat.pat = vim_strsave(spats[RE_SEARCH].pat);
+    saved_last_idx = last_idx;
+# ifdef FEAT_SEARCH_EXTRA
+    saved_no_hlsearch = no_hlsearch;
+# endif
+}
+
+    void
+restore_last_search_pattern(void)
+{
+    vim_free(spats[RE_SEARCH].pat);
+    spats[RE_SEARCH] = saved_last_search_spat;
+#if defined(FEAT_EVAL)
+    set_vv_searchforward();
+#endif
+    last_idx = saved_last_idx;
+# ifdef FEAT_SEARCH_EXTRA
+    SET_NO_HLSEARCH(saved_no_hlsearch);
+# endif
+}
 
 #if defined(EXITFREE) || defined(PROTO)
     void
