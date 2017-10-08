@@ -438,6 +438,8 @@ func Test_search_cmdline_inchlsearch()
   call assert_equal('last pattern', @/)
   call feedkeys("/3\<bs>\<bs>", 'tx')
   call assert_equal('last pattern', @/)
+  call feedkeys("/third\<c-g>\<c-t>\<Esc>", 'tx')
+  call assert_equal('last pattern', @/)
 
   " clean up
   set noincsearch nohlsearch noinchlsearch
