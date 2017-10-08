@@ -1914,6 +1914,7 @@ cmdline_changed:
 	    }
 	    else
 	    {
+		int search_flags = SEARCH_OPT + SEARCH_NOOF + SEARCH_PEEK;
 		cursor_off();		/* so the user knows we're busy */
 		out_flush();
 		++emsg_off;    /* So it doesn't beep if bad expr */
@@ -1921,8 +1922,6 @@ cmdline_changed:
 		/* Set the time limit to half a second. */
 		profile_setlimit(500L, &tm);
 #endif
-
-		int search_flags = SEARCH_OPT + SEARCH_NOOF + SEARCH_PEEK;
 		if (!p_ihls) {
 		    search_flags += SEARCH_KEEP;
 		}
