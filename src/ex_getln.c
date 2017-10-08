@@ -1908,7 +1908,8 @@ cmdline_changed:
 	    save_last_search_pattern();
 
 	    /* If there is no command line, don't do anything */
-	    if (ccline.cmdlen == 0) {
+	    if (ccline.cmdlen == 0)
+	    {
 		i = 0;
 		SET_NO_HLSEARCH(TRUE); /* Turn off previous highlight */
 	    }
