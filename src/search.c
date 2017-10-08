@@ -332,9 +332,9 @@ restore_search_patterns(void)
     {
 	vim_free(spats[0].pat);
 	spats[0] = saved_spats[0];
-#if defined(FEAT_EVAL)
+# if defined(FEAT_EVAL)
 	set_vv_searchforward();
-#endif
+# endif
 	vim_free(spats[1].pat);
 	spats[1] = saved_spats[1];
 	last_idx = saved_last_idx;
@@ -363,7 +363,7 @@ free_search_patterns(void)
 }
 #endif
 
-# ifdef FEAT_SEARCH_EXTRA
+#ifdef FEAT_SEARCH_EXTRA
 /*
  * Save and restore the search pattern for incremental highlight search
  * feature ('inchlsearch').
@@ -387,13 +387,13 @@ restore_last_search_pattern(void)
 {
     vim_free(spats[RE_SEARCH].pat);
     spats[RE_SEARCH] = saved_last_search_spat;
-#if defined(FEAT_EVAL)
+# if defined(FEAT_EVAL)
     set_vv_searchforward();
-#endif
+# endif
     last_idx = saved_last_idx;
     SET_NO_HLSEARCH(saved_no_hlsearch);
 }
-# endif
+#endif
 
 /*
  * Return TRUE when case should be ignored for search pattern "pat".
