@@ -100,11 +100,11 @@ static int	lastc_bytelen = 1;	/* >1 for multi-byte char */
 #if defined(FEAT_AUTOCMD) || defined(FEAT_EVAL) || defined(PROTO)
 /* copy of spats[], for keeping the search patterns while executing autocmds */
 static struct spat  saved_spats[2];
+# ifdef FEAT_SEARCH_EXTRA
 /* copy of spats[RE_SEARCH], for keeping the search patterns while incremental
  * searching */
 static struct spat  saved_last_search_spat;
 static int	    saved_last_idx = 0;
-# ifdef FEAT_SEARCH_EXTRA
 static int	    saved_no_hlsearch = 0;
 # endif
 #endif
