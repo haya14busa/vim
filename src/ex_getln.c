@@ -1691,11 +1691,11 @@ getcmdline(
 			t = match_end;
 			search_flags += SEARCH_COL;
 		    }
+		    else
+			t = match_start;
 		    if (!p_ihls) {
 			search_flags += SEARCH_KEEP;
 		    }
-		    else
-			t = match_start;
 		    ++emsg_off;
 		    i = searchit(curwin, curbuf, &t,
 				 c == Ctrl_G ? FORWARD : BACKWARD,
