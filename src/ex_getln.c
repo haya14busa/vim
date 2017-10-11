@@ -1681,10 +1681,12 @@ getcmdline(
 		{
 		    pos_T  t;
 		    int    search_flags = SEARCH_NOOF + SEARCH_PEEK;
+		    int    save_p_hls = p_hls;
 
 		    if (char_avail())
 			continue;
 		    save_last_search_pattern();
+		    p_hls = TRUE;
 		    cursor_off();
 		    out_flush();
 		    if (c == Ctrl_G)
@@ -1694,8 +1696,6 @@ getcmdline(
 		    }
 		    else
 			t = match_start;
-		    if (!p_ihls)
-			search_flags += SEARCH_KEEP;
 		    ++emsg_off;
 		    i = searchit(curwin, curbuf, &t,
 				 c == Ctrl_G ? FORWARD : BACKWARD,
@@ -1748,6 +1748,7 @@ getcmdline(
 			old_botline = curwin->w_botline;
 			update_screen(NOT_VALID);
 			restore_last_search_pattern();
+			p_hls = save_p_hls;
 			redrawcmdline();
 		    }
 		    else
@@ -1896,6 +1897,7 @@ cmdline_changed:
 #ifdef FEAT_RELTIME
 	    proftime_T	tm;
 #endif
+	    int save_p_hls = p_hls;
 
 	    /* if there is a character waiting, search and redraw later */
 	    if (char_avail())
@@ -1906,6 +1908,7 @@ cmdline_changed:
 	    incsearch_postponed = FALSE;
 	    curwin->w_cursor = search_start;  /* start at old position */
 	    save_last_search_pattern();
+	    p_hls = TRUE;
 
 	    /* If there is no command line, don't do anything */
 	    if (ccline.cmdlen == 0)
@@ -1923,8 +1926,6 @@ cmdline_changed:
 		/* Set the time limit to half a second. */
 		profile_setlimit(500L, &tm);
 #endif
-		if (!p_ihls)
-		    search_flags += SEARCH_KEEP;
 		i = do_search(NULL, firstc, ccline.cmdbuff, count,
 			search_flags,
 #ifdef FEAT_RELTIME
@@ -1984,6 +1985,7 @@ cmdline_changed:
 	    update_screen(SOME_VALID);
 	    restore_cmdline(&save_ccline);
 	    restore_last_search_pattern();
+	    p_hls = save_p_hls;
 
 	    /* Leave it at the end to make CTRL-R CTRL-W work. */
 	    if (i != 0)
