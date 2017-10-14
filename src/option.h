@@ -586,6 +586,7 @@ EXTERN int	p_imcmdline;	/* 'imcmdline' */
 EXTERN int	p_imdisable;	/* 'imdisable' */
 #endif
 EXTERN int	p_is;		/* 'incsearch' */
+EXTERN int	p_ihls;		/* 'inchlsearch' */
 EXTERN int	p_im;		/* 'insertmode' */
 EXTERN char_u	*p_isf;		/* 'isfname' */
 EXTERN char_u	*p_isi;		/* 'isident' */
@@ -662,6 +663,10 @@ EXTERN long	p_mouset;	/* 'mousetime' */
 EXTERN int	p_more;		/* 'more' */
 #ifdef FEAT_MZSCHEME
 EXTERN long	p_mzq;		/* 'mzquantum */
+# if defined(DYNAMIC_MZSCHEME)
+EXTERN char_u	*p_mzschemedll;	/* 'mzschemedll' */
+EXTERN char_u	*p_mzschemegcdll; /* 'mzschemegcdll' */
+# endif
 #endif
 #if defined(MSWIN)
 EXTERN int	p_odev;		/* 'opendevice' */
